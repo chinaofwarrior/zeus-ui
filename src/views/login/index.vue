@@ -74,7 +74,18 @@
       <br>
       <social-sign />
     </el-dialog>
-
+    <!--海浪-->
+    <div class="wave-wrapper wave-animation">
+      <div class="wave-wrapper-inner">
+        <div class="wave wave-top" style="background-image: url('/static/images/wave-front.png')"></div>
+      </div>
+      <div class="wave-wrapper-inner">
+        <div class="wave wave-middle" style="background-image: url('/static/images/wave-middle.png')"></div>
+      </div>
+      <div class="wave-wrapper-inner">
+        <div class="wave wave-back" style="background-image: url('/static/images/wave-back.png')"></div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -162,13 +173,13 @@ export default {
             // 其他项目后台根据参数 redirectURL, 跳转到对应的项目上
             // 如果没有此参数，根据 redirect 返回到本项目指定路由
             this.loading = false
-
             if (this.redirectURL) {
               location.href = decodeURIComponent(this.redirectURL)
               return
             }
             this.$router.push({ path: this.redirect || '/' })
           }).catch((res) => {
+            this.loading = false
             if (res.code === 13001) {
               this.showCaptcha()
               // getUserCaptcha().then((json) => {
@@ -178,7 +189,6 @@ export default {
             } else {
               this.$message.error(res.msg)
             }
-            this.loading = false
           })
         } else {
           console.log('error submit!!')
@@ -265,6 +275,9 @@ $light_gray:#eee;
   height: 100%;
   width: 100%;
   background-color: $bg;
+  input{
+    background: rgba(0, 0, 0, 0.1);
+  }
   .login-form {
     position: absolute;
     left: 0;
@@ -329,6 +342,79 @@ $light_gray:#eee;
     position: absolute;
     right: 35px;
     bottom: 28px;
+  }
+
+  /*海浪*/
+  @keyframes move_wave {
+    0% {
+      transform: translateX(0) translateZ(0) scaleY(1)
+    }
+    50% {
+      transform: translateX(-25%) translateZ(0) scaleY(0.55)
+    }
+    100% {
+      transform: translateX(-50%) translateZ(0) scaleY(1)
+    }
+  }
+  .wave-wrapper {
+    /*overflow: hidden;*/
+    position: relative;
+    /*left: 0;*/
+    /*right: 0;*/
+    bottom: 0;
+    /*top: 0;*/
+    margin: auto;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+  }
+  .wave-wrapper-inner {
+    position: absolute;
+    width: 100%;
+    overflow: hidden;
+    height: 100%;
+    bottom: -1px;
+    /*background-image: linear-gradient(to top, #86377b 20%, #27273c 80%);*/
+    border-bottom: 50px solid #ffffff;
+  }
+  .wave {
+    position: absolute;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background-repeat: repeat no-repeat;
+    background-position: 0 bottom;
+    transform-origin: center bottom;
+  }
+  .wave-top {
+    z-index: 15;
+    opacity: 0.5;
+    background-size: 50% 100px;
+    background-image: url('/static/images/wave-front.png');
+  }
+  .wave-animation .wave-top {
+    animation: move-wave 3s;
+    -webkit-animation: move-wave 3s;
+    -webkit-animation-delay: 1s;
+    animation-delay: 1s;
+  }
+  .wave-middle {
+    z-index: 10;
+    opacity: 0.75;
+    background-size: 50% 120px;
+    background-image: url('/static/images/wave-middle.png');
+  }
+  .wave-animation .wave-middle {
+    animation: move_wave 10s linear infinite;
+  }
+  .wave-back {
+    z-index: 5;
+    opacity: 0.9;
+    background-size: 50% 100px;
+    background-image: url('/static/images/wave-back.png');
+  }
+  .wave-animation .wave-back {
+    animation: move_wave 15s linear infinite;
   }
 }
 </style>
