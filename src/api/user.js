@@ -74,3 +74,14 @@ export function deleteUser(data) {
     data: qs.stringify(data)
   })
 }
+
+// 绑定钉钉
+export function bindDingtalk() {
+  return request({
+    url: '/user/bind-dingtalk',
+    method: 'post',
+    data: qs.stringify({
+      code: '0479a827c76a31b29a86ded517691c2f'
+    })
+  })
+}

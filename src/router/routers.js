@@ -62,7 +62,12 @@ export const constantRouterMap = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: 'dashboard', icon: 'dashboard', noCache: true, affix: true }
+        meta: {
+          title: 'dashboard',
+          icon: 'dashboard',
+          noCache: true,
+          affix: true
+        }
       }
     ]
   }
@@ -94,13 +99,16 @@ export const asyncRouterMap = [
           {
             name: '浏览',
             code: 'show'
-          }, {
+          },
+          {
             name: '添加',
             code: 'add'
-          }, {
+          },
+          {
             name: '修改',
             code: 'edit'
-          }, {
+          },
+          {
             name: '删除',
             code: 'del'
           }
@@ -132,13 +140,16 @@ export const asyncRouterMap = [
               {
                 name: '浏览',
                 code: 'show'
-              }, {
+              },
+              {
                 name: '添加',
                 code: 'add'
-              }, {
+              },
+              {
                 name: '修改',
                 code: 'edit'
-              }, {
+              },
+              {
                 name: '删除',
                 code: 'del'
               }
@@ -158,7 +169,8 @@ export const asyncRouterMap = [
               {
                 name: '浏览',
                 code: 'show'
-              }, {
+              },
+              {
                 name: '修改',
                 code: 'edit'
               }
@@ -179,13 +191,16 @@ export const asyncRouterMap = [
           {
             name: '浏览',
             code: 'show'
-          }, {
+          },
+          {
             name: '添加',
             code: 'add'
-          }, {
+          },
+          {
             name: '修改',
             code: 'edit'
-          }, {
+          },
+          {
             name: '删除',
             code: 'del'
           }
@@ -216,13 +231,16 @@ export const asyncRouterMap = [
           {
             name: '浏览',
             code: 'show'
-          }, {
+          },
+          {
             name: '添加',
             code: 'add'
-          }, {
+          },
+          {
             name: '修改',
             code: 'edit'
-          }, {
+          },
+          {
             name: '删除',
             code: 'del'
           }
@@ -241,13 +259,44 @@ export const asyncRouterMap = [
           {
             name: '浏览',
             code: 'show'
-          }, {
+          },
+          {
             name: '添加',
             code: 'add'
-          }, {
+          },
+          {
             name: '修改',
             code: 'edit'
-          }, {
+          },
+          {
+            name: '删除',
+            code: 'del'
+          }
+        ]
+      },
+      {
+        path: 'dataPerm',
+        component: () => import('@/views/system/dataPerm'),
+        name: 'dataPerm',
+        meta: {
+          title: 'dataPerm',
+          icon: 'peoples',
+          roles: ['/auth-system/dataPerm']
+        },
+        auth: [
+          {
+            name: '浏览',
+            code: 'show'
+          },
+          {
+            name: '添加',
+            code: 'add'
+          },
+          {
+            name: '修改',
+            code: 'edit'
+          },
+          {
             name: '删除',
             code: 'del'
           }

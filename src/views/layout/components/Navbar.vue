@@ -183,21 +183,24 @@ export default {
         height: 50px;
         margin-right: 10px;
         overflow: hidden;
-        background: rgba(239, 239, 239, 0.7);
+        // background: rgba(239, 239, 239, 0.7);
         .avatar-wrapper {
-          margin-top: 5px;
-          padding: 0 25px 0 10px;
+          // margin-top: 5px;
+          padding: 0 25px 0 0px;
           position: relative;
           span {
             font-weight: bold;
             position: relative;
-            top: -15px;
+            top: -5px;
             margin-left: 5px;
+            font-size: 18px;
           }
           .user-avatar {
             cursor: pointer;
-            width: 40px;
-            height: 40px;
+            vertical-align: middle;
+                margin-top: -5px;
+            // width: 40px;
+            // height: 40px;
             border-radius: 20px;
           }
           .el-icon-caret-bottom {

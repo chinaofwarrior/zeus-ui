@@ -358,7 +358,7 @@ export default {
     },
     getRoleList() {
       // { q: 'd=' + this.domain_id }
-      fetchRoleList().then(response => {
+      fetchRoleList({ limit: 1000 }).then(response => {
         this.rolelist = response.data.result
         this.getDomainList()
         setTimeout(() => {
