@@ -100,14 +100,26 @@
             :disabled="dialogStatus!=='create'"
             class="filter-item"
             placeholder="Please select"
-            @change="getMenuList">
+            @change="getPermList">
             <el-option v-for="item in domainlist" :key="item.id" :label="item.name" :value="item.id"/>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('role.menuscope')">
+          <el-radio-group v-model="scopeType" class="radio">
+            <el-radio-button label="1">{{ $t('role.menuscope') }}</el-radio-button>
+            <el-radio-button label="2">{{ $t('role.datascope') }}</el-radio-button>
+          </el-radio-group>
           <el-tree
+            v-show="parseInt(scopeType) === 1"
             ref="tree"
             :data="tree_data"
+            :props="tree_props"
+            show-checkbox
+            node-key="id"/>
+          <el-tree
+            v-show="parseInt(scopeType) === 2"
+            ref="treeData"
+            :data="tree_data_perm"
             :props="tree_props"
             show-checkbox
             node-key="id"/>
@@ -128,6 +140,7 @@ import { fetchDomainList } from '@/api/domain'
 import { fetchMenuList } from '@/api/menu'
 // import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import { dataPermList } from '@/api/dataPerm'
 
 export default {
   name: 'Role',
@@ -169,6 +182,7 @@ export default {
       },
       downloadLoading: false,
       tree_data: [],
+      tree_data_perm: [],
       tree_props: {
         children: 'children',
         label: 'name'
@@ -176,7 +190,8 @@ export default {
       domainlist: [],
       domain_id: '',
       search_domain_id: '',
-      menuslist: []
+      menuslist: [],
+      scopeType: 1
     }
   },
   created() {
@@ -205,19 +220,30 @@ export default {
       }
       this.getList()
     },
-    getMenuList() {
-      fetchMenuList({ domain_id: this.domain_id }).then(response => {
-        const res_menus = response.data.result
-        this.menuslist = res_menus
+    // 获取权限列表 （角色权限or数据权限）
+    getPermList() {
+      Promise.all([fetchMenuList({
+        domain_id: this.domain_id
+      }), dataPermList({
+        start: 0,
+        limit: 1000,
+        domain_id: this.domain_id
+      })]).then(response => {
+        const res_menus = response[0].data.result
+        const result = response[1].data.result
         if (res_menus && res_menus.length > 0) {
           this.tree_data = this.o(res_menus, 0)
         } else {
           this.tree_data = []
         }
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+        if (result && result.length > 0) {
+          this.tree_data_perm = this.o(result, 0)
+        } else {
+          this.tree_data_perm = []
+        }
+        const { menu_ids_ele = '', data_perm_ids = '' } = this.temp
+        this.$refs.tree.setCheckedKeys(menu_ids_ele.split(','))
+        this.$refs.treeData.setCheckedKeys(data_perm_ids.split(','))
       })
     },
     getDeptList() {
@@ -230,7 +256,7 @@ export default {
       })
     },
     o(data, id) {
-      const menu = data.filter(o => o.parent_id === id.toString())
+      const menu = data.filter(o => parseInt(o.parent_id) === parseInt(id))
       menu.forEach(o => {
         o.children = this.o(data, o.id)
       })
@@ -275,7 +301,7 @@ export default {
     handleCreate() {
       this.resetTemp()
       this.domainlist.length > 0 ? this.domain_id = this.domainlist[0].id : ''
-      this.getMenuList()
+      this.getPermList()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -290,15 +316,20 @@ export default {
           this.temp.role_name = this.temp.name
           this.temp.menu_ids_ele = this.$refs.tree.getCheckedKeys().join(',')
           const menu_ids = []
+          const data_perm_ids = []
           this.$refs.tree.getCheckedKeys().forEach(o => {
             menu_ids.push(o)
-            this.findParentMenus(menu_ids, o)
+            // this.findParentMenus(menu_ids, o)
             // const s = this.menuslist.find(i => i.id === o)
             // if (s) {
             //   menu_ids.push(s.parent_id)
             // }
           })
+          this.$refs.treeData.getCheckedKeys().forEach(o => {
+            data_perm_ids.push(o)
+          })
           this.temp.menu_ids = Array.from(new Set(menu_ids)).join(',')
+          this.temp.data_perm_ids = Array.from(new Set(data_perm_ids)).join(',')
           this.temp.domain_id = this.domain_id
           createRole(this.temp).then(() => {
             // this.list.unshift(this.temp)
@@ -322,11 +353,10 @@ export default {
       this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogStatus = 'update'
       this.domain_id = this.temp.domain.id
-      this.getMenuList()
+      this.getPermList()
       this.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
-        this.$refs.tree.setCheckedKeys(this.temp.menu_ids_ele.split(','))
       })
     },
     findParentMenus(menus, id) {
@@ -342,6 +372,7 @@ export default {
           this.temp.role_name = this.temp.name
           this.temp.menu_ids_ele = this.$refs.tree.getCheckedKeys().join(',')
           const menu_ids = []
+          const data_perm_ids = []
           this.$refs.tree.getCheckedKeys().forEach(o => {
             menu_ids.push(o)
             this.findParentMenus(menu_ids, o)
@@ -350,7 +381,11 @@ export default {
             //   menu_ids.push(s.parent_id)
             // }
           })
+          this.$refs.treeData.getCheckedKeys().forEach(o => {
+            data_perm_ids.push(o)
+          })
           this.temp.menu_ids = Array.from(new Set(menu_ids)).join(',')
+          this.temp.data_perm_ids = Array.from(new Set(data_perm_ids)).join(',')
           this.temp.domain_id = this.domain_id
           delete this.temp.domain
           const tempData = Object.assign({}, this.temp)
@@ -399,6 +434,9 @@ export default {
 </script>
 
 <style>
+  .radio {
+    margin-bottom: 10px;
+  }
   .pagination-container {
     margin-top: 0;
   }

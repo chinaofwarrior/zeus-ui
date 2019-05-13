@@ -18,7 +18,7 @@ export function logout() {
 
 export function getUserPrem(token) {
   return request({
-    url: 'user/perm/list',
+    url: 'user/perm/list?domain=root',
     method: 'get'
   })
 }

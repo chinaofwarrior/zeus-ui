@@ -64,26 +64,22 @@
       <br>
       <br>
       <br>
-      <!--<el-button class="thirdparty-button" type="primary" @click="showDialog=true">{{ $t('login.thirdparty') }}</el-button>-->
+      <el-button class="thirdparty-button" type="primary" @click="showDialog=true">{{ $t('login.thirdparty') }}</el-button>
     </el-form>
 
     <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog" append-to-body>
-      {{ $t('login.thirdpartyTips') }}
-      <br>
-      <br>
-      <br>
       <social-sign />
     </el-dialog>
     <!--海浪-->
     <div class="wave-wrapper wave-animation">
       <div class="wave-wrapper-inner">
-        <div class="wave wave-top" style="background-image: url('/static/images/wave-front.png')"></div>
+        <div class="wave wave-top" style="background-image: url('/static/images/wave-front.png')"/>
       </div>
       <div class="wave-wrapper-inner">
-        <div class="wave wave-middle" style="background-image: url('/static/images/wave-middle.png')"></div>
+        <div class="wave wave-middle" style="background-image: url('/static/images/wave-middle.png')"/>
       </div>
       <div class="wave-wrapper-inner">
-        <div class="wave wave-back" style="background-image: url('/static/images/wave-back.png')"></div>
+        <div class="wave wave-back" style="background-image: url('/static/images/wave-back.png')"/>
       </div>
     </div>
   </div>
@@ -101,14 +97,14 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (value.length < 1) {
-        callback(new Error('请输入用户名'))
+        callback(new Error('Please enter your account'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 1) {
-        callback(new Error('请输入密码'))
+        callback(new Error('Please enter your password'))
       } else {
         callback()
       }
@@ -145,6 +141,19 @@ export default {
   created() {
     // window.addEventListener('hashchange', this.afterQRScan)
   },
+  mounted() {
+    const code = this.$route.query.code
+    if (code) {
+      this.loading = true
+      this.$store.dispatch('LoginByThird', { code }).then(() => {
+        this.loading = false
+        this.$router.push('/dashboard')
+      }).catch(res => {
+        this.loading = false
+        this.$message.error(res.msg)
+      })
+    }
+  },
   destroyed() {
     // window.removeEventListener('hashchange', this.afterQRScan)
   },
@@ -173,13 +182,13 @@ export default {
             // 其他项目后台根据参数 redirectURL, 跳转到对应的项目上
             // 如果没有此参数，根据 redirect 返回到本项目指定路由
             this.loading = false
+
             if (this.redirectURL) {
               location.href = decodeURIComponent(this.redirectURL)
               return
             }
             this.$router.push({ path: this.redirect || '/' })
           }).catch((res) => {
-            this.loading = false
             if (res.code === 13001) {
               this.showCaptcha()
               // getUserCaptcha().then((json) => {
@@ -189,6 +198,7 @@ export default {
             } else {
               this.$message.error(res.msg)
             }
+            this.loading = false
           })
         } else {
           console.log('error submit!!')
@@ -275,9 +285,6 @@ $light_gray:#eee;
   height: 100%;
   width: 100%;
   background-color: $bg;
-  input{
-    background: rgba(0, 0, 0, 0.1);
-  }
   .login-form {
     position: absolute;
     left: 0;
