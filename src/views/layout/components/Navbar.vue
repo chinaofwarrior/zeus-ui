@@ -36,16 +36,22 @@
               {{ $t('navbar.dashboard') }}
             </el-dropdown-item>
           </router-link>
+          <!-- 个人中心 -->
           <el-dropdown-item divided>
-            <span style="display:block;" @click="dialogFormVisible=true">{{ $t('navbar.password') }}</span>
+            <span style="display:block;" @click="$router.push('/my/personal')">{{ $t('navbar.personal') }}</span>
           </el-dropdown-item>
+          <!-- 修改密码 -->
+          <!-- <el-dropdown-item divided>
+            <span style="display:block;" @click="dialogFormVisible=true">{{ $t('navbar.password') }}</span>
+          </el-dropdown-item> -->
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <el-dialog :visible.sync="dialogFormVisible" :title="$t('navbar.password')" width="420px">
+    <!-- 修改密码功能移到个人中心 -->
+    <!-- <el-dialog :visible.sync="dialogFormVisible" :title="$t('navbar.password')" width="420px">
       <el-form :model="form">
         <el-form-item label-width="100px" label="新密码">
           <el-input v-model="form.re_password" type="password" placeholder="请输入" autocomplete="off"/>
@@ -58,7 +64,7 @@
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="toUpWord">确 定</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -71,7 +77,7 @@ import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import LangSelect from '@/components/LangSelect'
 import ThemePicker from '@/components/ThemePicker'
-import minLogo from '@/assets/images/logo-min.png'
+import minLogo from '@/assets/images/xgo_logo113x31.png'
 import { updateUserPassWord } from '@/api/user'
 
 export default {

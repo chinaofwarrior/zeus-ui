@@ -9,6 +9,7 @@ import {
   removeToken
 } from '@/utils/auth'
 import { setTagNavListInLocalstorage } from '@/utils'
+import { loginDingtalk } from '@/api/user'
 
 const user = {
   state: {
@@ -58,19 +59,19 @@ const user = {
 
   actions: {
     // 用户名登录
-    LoginByUsername({
-      commit
-    }, userInfo) {
+    LoginByUsername({ commit }, userInfo) {
       // const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
-        loginByUsername(userInfo).then(response => {
-          const data = response.data
-          commit('SET_TOKEN', data.access_token)
-          setToken(data.access_token)
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
+        loginByUsername(userInfo)
+          .then(response => {
+            const data = response.data
+            commit('SET_TOKEN', data.access_token)
+            setToken(data.access_token)
+            resolve()
+          })
+          .catch(error => {
+            reject(error)
+          })
         // const response = {
         //   data: {
         //     roles: ['admin', 'permission', 'user', 'dept', 'role', 'system', 'menu', 'logs', 'log_login', 'log_operation', 'log_error'],
@@ -87,81 +88,100 @@ const user = {
       })
     },
 
-    // 获取用户信息
-    GetUserInfo({
-      commit,
-      state
-    }) {
+    // 第三方登录
+    LoginByThird({ commit }, data) {
       return new Promise((resolve, reject) => {
-        getUserPrem().then(response => {
-          if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
-            reject('error')
-          }
-          const data = response.data
-          const roles = []
-          const auth = []
-          data.result.forEach(o => {
-            var p = o.obj.split(':')
-            roles.push(p[0])
-            auth.push(o.obj)
+        loginDingtalk(data)
+          .then(response => {
+            const data = response.data
+            commit('SET_TOKEN', data.access_token)
+            setToken(data.access_token)
+            resolve()
           })
-          // console.log(Array.from(new Set(roles)))
-          // roles.push('/permission/user')
-          // roles.push('/permission')
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
 
-          if (roles && roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', Array.from(new Set(roles)))
-          } else {
-            reject('getInfo: roles must be a non-null array !')
-          }
-          if (auth && auth.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_AUTH', Array.from(new Set(auth)))
-          } else {
-            reject('getInfo: auth must be a non-null array !')
-          }
-          const res_data = {
-            data: {
-              roles: Array.from(new Set(roles)),
-              auth: Array.from(new Set(auth)),
-              token: 'admin',
-              introduction: '我是超级管理员',
-              avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-              name: data.info.username || ''
+    // 获取用户信息
+    GetUserInfo({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        getUserPrem()
+          .then(response => {
+            if (!response.data) {
+              // 由于mockjs 不支持自定义状态码只能这样hack
+              reject('error')
             }
-          }
+            const data = response.data
+            const roles = []
+            const auth = []
+            data.result.forEach(o => {
+              var p = o.obj.split(':')
+              roles.push(p[0])
+              auth.push(o.obj)
+            })
+            // console.log(Array.from(new Set(roles)))
+            // roles.push('/permission/user')
+            // roles.push('/permission')
 
-          commit('SET_NAME', res_data.data.name)
-          commit('SET_AVATAR', res_data.data.avatar)
-          commit('SET_INTRODUCTION', res_data.data.introduction)
-          resolve(res_data)
-        }).catch(error => {
-          reject(error)
-        })
-      //   const response = {
-      //     data: {
-      //       roles: ['admin', 'permission', 'user', 'dept', 'role', 'system', 'menu', 'logs', 'log_login', 'log_operation', 'log_error'],
-      //       auth: ['user_add', 'user_show'],
-      //       token: 'admin',
-      //       introduction: '我是超级管理员',
-      //       avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-      //       name: 'Super Admin'
-      //     }
-      //   }
-      //   if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
-      //     reject('error')
-      //   }
-      //   const data = response.data
-      //
-      //   if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-      //     commit('SET_ROLES', data.roles)
-      //   } else {
-      //     reject('getInfo: roles must be a non-null array !')
-      //   }
-      //
-      //   commit('SET_NAME', data.name)
-      //   commit('SET_AVATAR', data.avatar)
-      //   commit('SET_INTRODUCTION', data.introduction)
-      //   resolve(response)
+            if (roles && roles.length > 0) {
+              // 验证返回的roles是否是一个非空数组
+              commit('SET_ROLES', Array.from(new Set(roles)))
+            } else {
+              reject('getInfo: roles must be a non-null array !')
+            }
+            if (auth && auth.length > 0) {
+              // 验证返回的roles是否是一个非空数组
+              commit('SET_AUTH', Array.from(new Set(auth)))
+            } else {
+              reject('getInfo: auth must be a non-null array !')
+            }
+            const res_data = {
+              data: {
+                roles: Array.from(new Set(roles)),
+                auth: Array.from(new Set(auth)),
+                token: 'admin',
+                introduction: '我是超级管理员',
+                avatar:
+                  'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+                name: data.info.username || ''
+              }
+            }
+
+            commit('SET_NAME', res_data.data.name)
+            commit('SET_AVATAR', res_data.data.avatar)
+            commit('SET_INTRODUCTION', res_data.data.introduction)
+            resolve(res_data)
+          })
+          .catch(error => {
+            reject(error)
+          })
+        //   const response = {
+        //     data: {
+        //       roles: ['admin', 'permission', 'user', 'dept', 'role', 'system', 'menu', 'logs', 'log_login', 'log_operation', 'log_error'],
+        //       auth: ['user_add', 'user_show'],
+        //       token: 'admin',
+        //       introduction: '我是超级管理员',
+        //       avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+        //       name: 'Super Admin'
+        //     }
+        //   }
+        //   if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
+        //     reject('error')
+        //   }
+        //   const data = response.data
+        //
+        //   if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
+        //     commit('SET_ROLES', data.roles)
+        //   } else {
+        //     reject('getInfo: roles must be a non-null array !')
+        //   }
+        //
+        //   commit('SET_NAME', data.name)
+        //   commit('SET_AVATAR', data.avatar)
+        //   commit('SET_INTRODUCTION', data.introduction)
+        //   resolve(response)
       })
     },
 
@@ -180,10 +200,7 @@ const user = {
     // },
 
     // 登出
-    LogOut({
-      commit,
-      state
-    }) {
+    LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
         // logout(state.token).then(() => {
         //   commit('SET_TOKEN', '')
@@ -202,9 +219,7 @@ const user = {
     },
 
     // 前端 登出
-    FedLogOut({
-      commit
-    }) {
+    FedLogOut({ commit }) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
         setTagNavListInLocalstorage([])
@@ -214,10 +229,7 @@ const user = {
     },
 
     // 动态修改权限
-    ChangeRoles({
-      commit,
-      dispatch
-    }, role) {
+    ChangeRoles({ commit, dispatch }, role) {
       return new Promise(resolve => {
         commit('SET_TOKEN', role)
         setToken(role)

@@ -18,7 +18,10 @@ export default {
     log_login: '登录日志',
     log_operation: '操作日志',
     log_error: '异常日志',
-    dataPerm: '数据权限'
+    dataPerm: '数据权限',
+    personal: '个人中心',
+    psw: '修改密码',
+    third: '第三方绑定'
   },
   navbar: {
     logOut: '退出登录',
@@ -28,7 +31,8 @@ export default {
     screenfull: '全屏',
     theme: '换肤',
     size: '布局大小',
-    binding: '绑定钉钉'
+    binding: '绑定钉钉',
+    personal: '个人中心'
   },
   login: {
     title: 'System LogIn', // 考虑到其他系统，默认实用英文

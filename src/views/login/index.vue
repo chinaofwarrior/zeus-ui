@@ -64,14 +64,10 @@
       <br>
       <br>
       <br>
-      <!--<el-button class="thirdparty-button" type="primary" @click="showDialog=true">{{ $t('login.thirdparty') }}</el-button>-->
+      <el-button class="thirdparty-button" type="primary" @click="showDialog=true">{{ $t('login.thirdparty') }}</el-button>
     </el-form>
 
     <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog" append-to-body>
-      {{ $t('login.thirdpartyTips') }}
-      <br>
-      <br>
-      <br>
       <social-sign />
     </el-dialog>
     <!--海浪-->
@@ -144,6 +140,19 @@ export default {
   },
   created() {
     // window.addEventListener('hashchange', this.afterQRScan)
+  },
+  mounted() {
+    const code = this.$route.query.code
+    if (code) {
+      this.loading = true
+      this.$store.dispatch('LoginByThird', { code }).then(() => {
+        this.loading = false
+        this.$router.push('/dashboard')
+      }).catch(res => {
+        this.loading = false
+        this.$message.error(res.msg)
+      })
+    }
   },
   destroyed() {
     // window.removeEventListener('hashchange', this.afterQRScan)

@@ -38,6 +38,11 @@ export const constantRouterMap = [
     hidden: true
   },
   {
+    path: '/third-login',
+    name: 'thirdLogin',
+    hidden: true
+  },
+  {
     path: '/auth-redirect',
     component: () => import('@/views/login/authredirect'),
     hidden: true
@@ -68,6 +73,51 @@ export const constantRouterMap = [
           noCache: true,
           affix: true
         }
+      },
+      {
+        path: 'my',
+        component: () => import('@/views/my'),
+        hidden: true,
+        redirect: 'my/personal',
+        children: [
+          {
+            path: 'personal',
+            name: 'personal',
+            meta: {
+              title: 'personal'
+            },
+            component: () => import('@/views/my/personal')
+          },
+          {
+            path: 'psw',
+            name: 'psw',
+            meta: {
+              title: 'psw'
+            },
+            component: () => import('@/views/my/psw')
+          },
+          {
+            path: 'third',
+            name: 'third',
+            meta: {
+              title: 'third'
+            },
+            children: [
+              {
+                path: 'from/:from',
+                name: 'thirdFrom',
+                redirect: to => {
+                  const { params, query } = to
+                  return {
+                    path: '/my/third',
+                    query: { ...params, ...query }
+                  }
+                }
+              }
+            ],
+            component: () => import('@/views/my/third')
+          }
+        ]
       }
     ]
   }

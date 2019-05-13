@@ -76,12 +76,36 @@ export function deleteUser(data) {
 }
 
 // 绑定钉钉
-export function bindDingtalk() {
+export function bind(data) {
   return request({
-    url: '/user/bind-dingtalk',
+    url: '/account/bind',
     method: 'post',
-    data: qs.stringify({
-      code: '0479a827c76a31b29a86ded517691c2f'
-    })
+    data: qs.stringify(data)
+  })
+}
+
+// 第三方绑定账号列表
+export function accountThird() {
+  return request({
+    url: '/account/third',
+    method: 'get'
+  })
+}
+
+// 第三方绑定账号列表
+export function unbind(data) {
+  return request({
+    url: '/account/unbind',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+// 钉钉登录
+export function loginDingtalk(data) {
+  return request({
+    url: '/user/login-dingtalk',
+    method: 'post',
+    data: qs.stringify(data)
   })
 }
