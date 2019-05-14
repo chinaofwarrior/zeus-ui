@@ -35,14 +35,14 @@ export default {
     personal: '个人中心'
   },
   login: {
-    title: 'System LogIn', // 考虑到其他系统，默认实用英文
-    logIn: 'LogIn',
-    username: 'Account',
-    password: 'Password',
-    // title: '系统登录',
-    // logIn: '登录',
-    // username: '账号',
-    // password: '密码',
+    // title: '登陆系统', // 考虑到其他系统，默认实用英文
+    // logIn: 'LogIn',
+    // username: 'Account',
+    // password: 'Password',
+    title: '系统登录',
+    logIn: '登录',
+    username: '账号',
+    password: '密码',
     any: '随便填',
     captcha: '验证码',
     thirdparty: '第三方登录',

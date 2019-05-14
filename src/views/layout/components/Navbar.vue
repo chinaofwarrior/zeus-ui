@@ -77,7 +77,7 @@ import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import LangSelect from '@/components/LangSelect'
 import ThemePicker from '@/components/ThemePicker'
-import minLogo from '@/assets/images/xgo_logo113x31.png'
+import minLogo from '@/assets/images/logo-min.png'
 import { updateUserPassWord } from '@/api/user'
 
 export default {
