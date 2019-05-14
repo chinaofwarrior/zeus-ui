@@ -23,8 +23,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
-import minLogo from '@/assets/images/favicon.png'
-import maxLogo from '@/assets/images/xgo_logo113x31.png'
+import minLogo from '@/assets/images/logo-min.png'
+import maxLogo from '@/assets/images/logo.png'
 
 export default {
   components: { SidebarItem },
