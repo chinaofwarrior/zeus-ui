@@ -205,8 +205,8 @@ export default {
             cursor: pointer;
             vertical-align: middle;
                 margin-top: -5px;
-            // width: 40px;
-            // height: 40px;
+            width: 40px;
+            height: 40px;
             border-radius: 20px;
           }
           .el-icon-caret-bottom {
