@@ -35,14 +35,14 @@ export default {
     personal: '个人中心'
   },
   login: {
-    // title: '登陆系统', // 考虑到其他系统，默认实用英文
-    // logIn: 'LogIn',
-    // username: 'Account',
-    // password: 'Password',
-    title: '系统登录',
-    logIn: '登录',
-    username: '账号',
-    password: '密码',
+    title: 'System LogIn', // 考虑到其他系统，默认实用英文
+    logIn: 'LogIn',
+    username: 'Account',
+    password: 'Password',
+    // title: '系统登录',
+    // logIn: '登录',
+    // username: '账号',
+    // password: '密码',
     any: '随便填',
     captcha: '验证码',
     thirdparty: '第三方登录',
@@ -208,6 +208,7 @@ export default {
     Edit: '编辑',
     Create: '新建',
     actions: '操作',
+    type_directories: '目录',
     type_menu: '菜单',
     type_button: '按钮'
   },

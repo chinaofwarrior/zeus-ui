@@ -64,7 +64,8 @@
         label-width="80px"
         style=" margin: 0 50px;">
         <el-form-item :label="$t('menu.type')">
-          <el-radio-group v-model="temp.menu_type">
+          <el-radio-group v-model="temp.menu_type" @change="typeChange">
+            <el-radio-button label="0">{{ $t('menu.type_directories') }}</el-radio-button>
             <el-radio-button label="1">{{ $t('menu.type_menu') }}</el-radio-button>
             <el-radio-button label="2">{{ $t('menu.type_button') }}</el-radio-button>
           </el-radio-group>
@@ -81,16 +82,16 @@
             change-on-select
           />
         </el-form-item>
-        <el-form-item :label="$t('menu.topnum')" prop="order_num">
+        <el-form-item v-if="temp.menu_type!=='2'" :label="$t('menu.topnum')" prop="order_num">
           <el-input v-model="temp.order_num"/>
         </el-form-item>
         <el-form-item v-if="temp.menu_type==='1'" :label="$t('menu.router')">
           <el-input v-model="temp.url"/>
         </el-form-item>
-        <el-form-item v-if="temp.menu_type==='2'" :label="$t('menu.auth')">
+        <el-form-item v-if="temp.menu_type!=='0'" :label="$t('menu.auth')">
           <el-input v-model="temp.perms"/>
         </el-form-item>
-        <el-form-item v-if="temp.menu_type==='1'" :label="$t('menu.icon')">
+        <el-form-item v-if="temp.menu_type!=='2'" :label="$t('menu.icon')">
           <el-select v-model="temp.icon" class="filter-item" placeholder="Please select">
             <el-option v-for="item in icons" :key="item" :label="item" :value="item">
               <svg-icon :icon-class="item"/>
@@ -120,7 +121,7 @@ export default {
   components: { treeTable },
   filters: {
     tag(type) {
-      return type === '1' ? '菜单' : '按钮'
+      return type === '0' ? '目录' : type === '1' ? '菜单' : '按钮'
     }
   },
   data() {
@@ -179,6 +180,11 @@ export default {
     this.getDeptList()
   },
   methods: {
+    // 点击按钮后置空From
+    typeChange(type) {
+      this.resetTemp()
+      this.temp.menu_type = type
+    },
     os(data) {
       data.forEach(o => {
         this.data_copy.push(o)
