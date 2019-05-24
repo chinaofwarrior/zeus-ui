@@ -64,7 +64,7 @@
         label-width="80px"
         style=" margin: 0 50px;">
         <el-form-item :label="$t('menu.type')">
-          <el-radio-group v-model="temp.menu_type" @change="typeChange">
+          <el-radio-group v-model="temp.menu_type"  :disabled="dialogStatus!=='create'" @change="typeChange">
             <el-radio-button label="0">{{ $t('menu.type_directories') }}</el-radio-button>
             <el-radio-button label="1">{{ $t('menu.type_menu') }}</el-radio-button>
             <el-radio-button label="2">{{ $t('menu.type_button') }}</el-radio-button>
